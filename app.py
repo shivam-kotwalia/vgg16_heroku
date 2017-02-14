@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 import sys
 import os
-sys.path.insert(0, '/home/nagarro/work/venvs/vgg16_code/deep-learning-models')
+#sys.path.insert(0, '/home/nagarro/work/venvs/vgg16_code/deep-learning-models')
 import run_imagenet
 
 app = Flask(__name__)
@@ -13,8 +13,8 @@ def hello():
 
 @app.route("/demo")
 def demo():
-    image_folder = "/home/nagarro/work/venvs/vgg16_code/flask/images/"
-    image_name = [i for i in os.listdir(image_folder)]
+    #image_folder = "/home/nagarro/work/venvs/vgg16_code/flask/images/"
+    image_name = [i for i in os.listdir(os.path.join(os.getcwd(),"images"))]
     image_name = os.path.join(image_folder, image_name[0])
     label = run_imagenet.predict_image(image_name)
     #return render_template("index.html")

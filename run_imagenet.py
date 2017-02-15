@@ -4,9 +4,10 @@ from imagenet_utils import decode_predictions
 from imagenet_utils import preprocess_input
 from vgg16 import VGG16
 import numpy as np
+import os
 
 import argparse
-import cv2
+#import cv2
 
 # ap = argparse.ArgumentParser()
 # ap.add_argument("-i", "--image", required=True, help='path to the input image')
@@ -14,7 +15,8 @@ import cv2
 
 #orig = cv2.imread(args["image"])
 
-def predict_image(image_path):
+def predict_image(image_name):
+    image_path = os.path.join(os.getcwd(),'images',image_name)
     print("[INFO] loading and preprocessing image...")
     image = image_utils.load_img(image_path, target_size=(224, 224))
     image = image_utils.img_to_array(image)

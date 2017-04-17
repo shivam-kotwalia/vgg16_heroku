@@ -1,5 +1,5 @@
 import keras
-from  keras.preprocessing import image as image_utils
+from keras.preprocessing import image as image_utils
 from imagenet_utils import decode_predictions
 from imagenet_utils import preprocess_input
 from vgg16 import VGG16
@@ -32,12 +32,14 @@ def predict_image(image_name):
     # classify the image
     print("[INFO] classifying image...")
     preds = model.predict(image)
+    #report = decode_predictions(preds)
+    #print(report)
     (inID, label, probability) = decode_predictions(preds)[0][0]
 
     # display the predictions to our screen
     print("ImageNet ID: {}, Label: {}".format(inID, label))
     return label
-
+    #return report
 
 # cv2.putText(orig, "Label: {}".format(label), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 # cv2.imshow("Classification", orig)

@@ -4,13 +4,24 @@ from werkzeug import secure_filename
 import os
 import run_imagenet
 import uuid
+import base64
+
+from flask_assets import Bundle,Environment
 
 app = Flask(__name__)
 
+js = Bundle(
+            'js/home.js',
+            'js/asd.js',
+             output='gep/main.js')
 
-@app.route("/")
-def hello():
-    return render_template('index.html')
+assets = Environment(app)
+
+assets.register('main_js',js)
+
+#@app.route("/")
+#def hello():
+#    return render_template('index.html')
 
 # @app.route("/demo")
 # def demo():
@@ -25,21 +36,24 @@ def hello():
 #     send_data = "<p>" + label + "</p>"
 #     return send_data
 
-@app.route('/demo', methods = ['GET', 'POST'])
+@app.route('/', methods = ['GET', 'POST'])
 def upload_file():
+   templateData = { 'label' : '' , 'image_path':'#'}
    if request.method == 'POST':
       f = request.files['file']
       print('uploaded images : ', f.filename)
-      image_name = str(uuid.uuid4())
+      image_name = str(uuid.uuid4())+'.jpg'`
       print("Image Name : " + image_name)
       image_folder = 'images'
-      image_full_path = os.path.join(os.getcwd(), image_folder , image_name )
+      image_full_path = os.path.join(os.getcwd(), image_folder , image_name)
       f.save(image_full_path)
-
+      with open(image_full_path ,'rb') as aaa:
+          base64_image = base64.b64encode(aaa.read())
       label = run_imagenet.predict_image(image_name)
       os.remove(image_full_path)
-      return label
+      templateData = { 'label': 'The prediction class is : '+label.capitalize() ,'image_path':'data:image/jpeg;base64,'+base64_image}
+   return render_template('index.html', **templateData)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0',debug=True)
 
